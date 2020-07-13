@@ -1,0 +1,8 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Mervin Academy Demo CloudFormation
+
+Resources:
+  Buketti:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: mervin-academy-cf-demo-bucket
