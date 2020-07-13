@@ -37,5 +37,8 @@ Resources:
         - subnet-2f0cdc70
         - subnet-46b73e48
 
-
+Outputs:
+  BackupLoadBalancerDNSName:
+    Description: The DNSName of the backup load balancer
+    Value: !GetAtt ALBMervi.DNSName
 
