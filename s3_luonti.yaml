@@ -6,3 +6,11 @@ Resources:
     Type: AWS::S3::Bucket
     Properties:
       BucketName: mervin-academy-cf-demo-bucket
+
+  Sqsmervi:
+    Type: AWS::SQS::Queue
+    Properties:
+       QueueName: String
+       Tags:
+         Key: Owner
+         Value: Mervi
