@@ -29,5 +29,13 @@ Resources:
       InstanceType: t2.micro
       ImageId: !Ref LatestAmiId
 
+  ALBMervi:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Scheme: internet-facing
+      Subnets:
+        - subnet-2f0cdc70
+        - subnet-46b73e48
+
 
 
