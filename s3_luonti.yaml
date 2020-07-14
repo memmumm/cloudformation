@@ -28,6 +28,11 @@ Resources:
     Properties:
       InstanceType: t2.micro
       ImageId: !Ref LatestAmiId
+      SecurityGroupIds:
+        - !Ref InstanceSecurityGroup
+      Tags:
+        - Key: Name
+          Value: Mervi-cf-ec2
 
   ALBMervi:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
@@ -36,9 +41,27 @@ Resources:
       Subnets:
         - subnet-2f0cdc70
         - subnet-46b73e48
+      SecurityGroups:
+        - !Ref LoadBalancerSecurityGroup
+
+  InstanceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Security group for EC2
+      GroupName: mervi-cf-ec2-security-group
+      VpcId: vpc-bc8f6cc1
+
+  LoadBalancerSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Security group for EC2
+      GroupName: mervi-cf-alb-security-group
+      VpcId: vpc-bc8f6cc1
 
 Outputs:
   BackupLoadBalancerDNSName:
     Description: The DNSName of the backup load balancer
     Value: !GetAtt ALBMervi.DNSName
+
+
 
