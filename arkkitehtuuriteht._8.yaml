@@ -7,6 +7,11 @@ Resources:
     Type: AWS::EC2::VPC
     Properties:
       CidrBlock: 10.0.0.0/16
+      Tags:
+        - Key: Name
+          Value: MerviVPC
+        - Key: Owner
+          Value: Mervi
 
   MerviSubnetA:
     Type: AWS::EC2::Subnet
@@ -15,6 +20,11 @@ Resources:
         Ref: MerviVPC
       CidrBlock: 10.0.0.0/24
       AvailabilityZone: "us-east-1a"
+      Tags:
+        - Key: Name
+          Value: MerviSubnetA
+        - Key: Owner
+          Value: Mervi
 
   MerviSubnetB:
     Type: AWS::EC2::Subnet
@@ -23,6 +33,11 @@ Resources:
         Ref: MerviVPC
       CidrBlock: 10.0.1.0/24
       AvailabilityZone: "us-east-1b"
+      Tags:
+        - Key: Name
+          Value: MerviSubnetB
+        - Key: Owner
+          Value: Mervi
 
   MerviSubnetC:
     Type: AWS::EC2::Subnet
@@ -31,9 +46,21 @@ Resources:
         Ref: MerviVPC
       CidrBlock: 10.0.2.0/24
       AvailabilityZone: "us-east-1c"
+      Tags:
+        - Key: Name
+          Value: MerviSubnetC
+        - Key: Owner
+          Value: Mervi
 
   MerviInternetGateway:
     Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: MerviInternetGateway
+        - Key: Owner
+          Value: Mervi
+
 
   MerviAttachGateway:
     Type: AWS::EC2::VPCGatewayAttachment
@@ -43,4 +70,24 @@ Resources:
       InternetGatewayId:
         Ref: MerviInternetGateway
 
+  NAT:
+    Type: AWS::EC2::NatGateway
+    Properties:
+      AllocationId:
+        Fn::GetAtt:
+          - MerviEIP
+          - AllocationId
+      SubnetId:
+        Ref: MerviSubnetA
+      Tags:
+        - Key: Name
+          Value: MerviNAT
+        - Key: Owner
+          Value: Mervi
+
+  MerviEIP:
+    DependsOn: MerviAttachGateway
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: vpc
 
