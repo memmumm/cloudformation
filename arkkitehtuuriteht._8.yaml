@@ -1,0 +1,33 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Mervin Academy Demo CloudFormation
+
+Resources:
+
+  MerviVPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+
+  MerviSubnetA:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId:
+        Ref: MerviVPC
+      CidrBlock: 10.0.0.0/24
+      AvailabilityZone: "us-east-1a"
+
+  MerviSubnetB:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId:
+        Ref: MerviVPC
+      CidrBlock: 10.0.1.0/24
+      AvailabilityZone: "us-east-1b"
+
+  MerviSubnetC:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId:
+        Ref: MerviVPC
+      CidrBlock: 10.0.2.0/24
+      AvailabilityZone: "us-east-1c"
