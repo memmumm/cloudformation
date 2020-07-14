@@ -65,6 +65,34 @@ Resources:
       GroupDescription: Security group for EC2
       GroupName: mervi-cf-alb-security-group
       VpcId: vpc-bc8f6cc1
+      SecurityGroupIngress:
+        FromPort: !Ref ApplicationPort
+        IpProtocol: tcp
+        CidrIp: 0.0.0.0/0
+        ToPort: !Ref ApplicationPort
+
+  LoadBalancerTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      Name: Mervi-LB-TG-1
+      Port: !Ref ApplicationPort
+      Protocol: HTTP
+      TargetType: instance
+      Tags:
+        - Key: Name
+          Value: LoadBalancer-TG
+      VpcId: vpc-bc8f6cc1
+
+  LoadBalancerListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref LoadBalancerTargetGroup
+      LoadBalancerArn: !Ref ALBMervi
+      Port: !Ref ApplicationPort
+      Protocol: HTTP
+
 
 Outputs:
   BackupLoadBalancerDNSName:

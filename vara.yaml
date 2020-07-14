@@ -1,0 +1,9 @@
+LoadBalancerListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions:
+        - Type: forward
+      TargetGroupArn: !Ref LoadBalancerTargetGroup
+      LoadBalancerArn: arn:aws:elasticloadbalancing:us-east-1:821383200340:loadbalancer/app/mervi-ALBMe-2TTKZAEXKNTW/10ed2ccd1483b6a6
+      Port: !Ref ApplicationPort
+      Protocol: HTTP
