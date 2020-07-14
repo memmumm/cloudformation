@@ -5,6 +5,9 @@ Parameters:
   LatestAmiId:
     Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
     Default: '/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2'
+  ApplicationPort:
+    Type: Number
+    Default: 80
 
 Resources:
   Buketti:
@@ -49,6 +52,11 @@ Resources:
     Properties:
       GroupDescription: Security group for EC2
       GroupName: mervi-cf-ec2-security-group
+      SecurityGroupIngress:
+        FromPort: !Ref ApplicationPort
+        IpProtocol: tcp
+        SourceSecurityGroupId: !Ref LoadBalancerSecurityGroup
+        ToPort: !Ref ApplicationPort
       VpcId: vpc-bc8f6cc1
 
   LoadBalancerSecurityGroup:
