@@ -31,3 +31,16 @@ Resources:
         Ref: MerviVPC
       CidrBlock: 10.0.2.0/24
       AvailabilityZone: "us-east-1c"
+
+  MerviInternetGateway:
+    Type: AWS::EC2::InternetGateway
+
+  MerviAttachGateway:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId:
+        Ref: MerviVPC
+      InternetGatewayId:
+        Ref: MerviInternetGateway
+
+
