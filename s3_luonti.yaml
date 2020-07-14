@@ -10,6 +10,39 @@ Parameters:
     Default: 80
 
 Resources:
+
+  LaunchConfigMervi:
+    Type: AWS::AutoScaling::LaunchConfiguration
+    Properties:
+      ImageId: ami-08f3d892de259504d
+      UserData:
+        Fn::Base64:
+          Fn::Join:
+            - "\n"
+            - - "#!/bin/bash"
+              - "amazon-linux-extras install epel"
+              - "amazon-linux-extras install nginx1"
+              - "systemctl start nginx"
+      SecurityGroups:
+        - Ref: InstanceSecurityGroup
+        - sg-070f5081135c4c225
+      InstanceType: t2.micro
+
+  AutoScalingMervi:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      AutoScalingGroupName: Mervi-AutoScalingGroup
+      MinSize: 1
+      MaxSize: 3
+      DesiredCapacity: 2
+      HealthCheckGracePeriod: 150
+      LaunchConfigurationName: mervin-stack-LaunchConfigMervi-CVNAC07S6OGI
+      VPCZoneIdentifier:
+        - subnet-2f0cdc70
+        - subnet-46b73e48
+      TargetGroupARNs:
+        - !Ref LoadBalancerTargetGroup
+
   Buketti:
     Type: AWS::S3::Bucket
     Properties:
@@ -25,17 +58,6 @@ Resources:
        Tags:
         - Key: Owner
           Value: Mervi
-
-  EC2mervi:
-    Type: AWS::EC2::Instance
-    Properties:
-      InstanceType: t2.micro
-      ImageId: !Ref LatestAmiId
-      SecurityGroupIds:
-        - !Ref InstanceSecurityGroup
-      Tags:
-        - Key: Name
-          Value: Mervi-cf-ec2
 
   ALBMervi:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
