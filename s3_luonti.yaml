@@ -8,8 +8,24 @@ Parameters:
   ApplicationPort:
     Type: Number
     Default: 80
+#  VpcId:
+#    Type: String
+#    Default: !GetAtt MerviNested.Outputs.VpcId
+#  SubnetAId:
+#    Type: String
+#    Default: !GetAtt MerviNested.Outputs.SubnetAId
+#  SubnetBId:
+#    Type: String
+#    Default: !GetAtt MerviNested.Outputs.SubnetBId
+#  SubnetCId:
+#    Type: String
+#    Default: !GetAtt MerviNested.Outputs.SubnetCId
 
 Resources:
+  MerviNested:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://mervi-cf-buketti.s3-eu-west-1.amazonaws.com/arkkitehtuuriteht._8.yaml
 
   LaunchConfigMervi:
     Type: AWS::AutoScaling::LaunchConfiguration
@@ -25,7 +41,6 @@ Resources:
               - "systemctl start nginx"
       SecurityGroups:
         - Ref: InstanceSecurityGroup
-        - sg-070f5081135c4c225
       InstanceType: t2.micro
 
   AutoScalingMervi:
@@ -38,8 +53,9 @@ Resources:
       HealthCheckGracePeriod: 150
       LaunchConfigurationName: mervin-stack-LaunchConfigMervi-CVNAC07S6OGI
       VPCZoneIdentifier:
-        - subnet-2f0cdc70
-        - subnet-46b73e48
+        - !GetAtt MerviNested.Outputs.SubnetAId
+        - !GetAtt MerviNested.Outputs.SubnetBId
+        - !GetAtt MerviNested.Outputs.SubnetCId
       TargetGroupARNs:
         - !Ref LoadBalancerTargetGroup
 
@@ -64,8 +80,9 @@ Resources:
     Properties:
       Scheme: internet-facing
       Subnets:
-        - subnet-2f0cdc70
-        - subnet-46b73e48
+        - !GetAtt MerviNested.Outputs.SubnetAId
+        - !GetAtt MerviNested.Outputs.SubnetBId
+        - !GetAtt MerviNested.Outputs.SubnetCId
       SecurityGroups:
         - !Ref LoadBalancerSecurityGroup
 
@@ -79,14 +96,14 @@ Resources:
         IpProtocol: tcp
         SourceSecurityGroupId: !Ref LoadBalancerSecurityGroup
         ToPort: !Ref ApplicationPort
-      VpcId: vpc-bc8f6cc1
+      VpcId: !GetAtt MerviNested.Outputs.VpcId
 
   LoadBalancerSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: Security group for EC2
       GroupName: mervi-cf-alb-security-group
-      VpcId: vpc-bc8f6cc1
+      VpcId: !GetAtt MerviNested.Outputs.VpcId
       SecurityGroupIngress:
         FromPort: !Ref ApplicationPort
         IpProtocol: tcp
@@ -103,7 +120,7 @@ Resources:
       Tags:
         - Key: Name
           Value: LoadBalancer-TG
-      VpcId: vpc-bc8f6cc1
+      VpcId: !GetAtt MerviNested.Outputs.VpcId
 
   LoadBalancerListener:
     Type: AWS::ElasticLoadBalancingV2::Listener

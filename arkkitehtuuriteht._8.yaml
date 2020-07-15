@@ -19,7 +19,7 @@ Resources:
       VpcId:
         Ref: MerviVPC
       CidrBlock: 10.0.0.0/24
-      AvailabilityZone: "us-east-1a"
+      AvailabilityZone: "eu-west-1a"
       Tags:
         - Key: Name
           Value: MerviSubnetA
@@ -32,7 +32,7 @@ Resources:
       VpcId:
         Ref: MerviVPC
       CidrBlock: 10.0.1.0/24
-      AvailabilityZone: "us-east-1b"
+      AvailabilityZone: "eu-west-1b"
       Tags:
         - Key: Name
           Value: MerviSubnetB
@@ -45,7 +45,7 @@ Resources:
       VpcId:
         Ref: MerviVPC
       CidrBlock: 10.0.2.0/24
-      AvailabilityZone: "us-east-1c"
+      AvailabilityZone: "eu-west-1c"
       Tags:
         - Key: Name
           Value: MerviSubnetC
@@ -70,7 +70,7 @@ Resources:
       InternetGatewayId:
         Ref: MerviInternetGateway
 
-  MerviNAT:
+  NAT:
     Type: AWS::EC2::NatGateway
     Properties:
       AllocationId:
@@ -108,8 +108,8 @@ Resources:
       RouteTableId:
         Ref: MerviRouteTableB
       DestinationCidrBlock: 0.0.0.0/0
-      GatewayId:
-        Ref: MerviNAT
+      NatGatewayId:
+        Ref: NAT
 
   MerviRouteC:
     Type: AWS::EC2::Route
@@ -118,8 +118,8 @@ Resources:
       RouteTableId:
         Ref: MerviRouteTableC
       DestinationCidrBlock: 0.0.0.0/0
-      GatewayId:
-        Ref: MerviNAT
+      NatGatewayId:
+        Ref: NAT
 
   MerviRouteTableA:
     Type: AWS::EC2::RouteTable
@@ -172,3 +172,12 @@ Resources:
       RouteTableId:
         Ref: MerviRouteTableC
 
+Outputs:
+  VpcId:
+    Value: !Ref MerviVPC
+  SubnetAId:
+    Value: !Ref MerviSubnetA
+  SubnetBId:
+    Value: !Ref MerviSubnetB
+  SubnetCId:
+    Value: !Ref MerviSubnetC
