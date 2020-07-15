@@ -25,6 +25,7 @@ Resources:
           Value: MerviSubnetA
         - Key: Owner
           Value: Mervi
+      MapPublicIpOnLaunch: True
 
   MerviSubnetB:
     Type: AWS::EC2::Subnet

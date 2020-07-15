@@ -30,7 +30,7 @@ Resources:
   LaunchConfigMervi:
     Type: AWS::AutoScaling::LaunchConfiguration
     Properties:
-      ImageId: ami-08f3d892de259504d
+      ImageId: ami-0c3e74fa87d2a4227
       UserData:
         Fn::Base64:
           Fn::Join:
@@ -51,7 +51,7 @@ Resources:
       MaxSize: 3
       DesiredCapacity: 2
       HealthCheckGracePeriod: 150
-      LaunchConfigurationName: mervin-stack-LaunchConfigMervi-CVNAC07S6OGI
+      LaunchConfigurationName: !Ref LaunchConfigMervi
       VPCZoneIdentifier:
         - !GetAtt MerviNested.Outputs.SubnetAId
         - !GetAtt MerviNested.Outputs.SubnetBId
