@@ -70,7 +70,7 @@ Resources:
       InternetGatewayId:
         Ref: MerviInternetGateway
 
-  NAT:
+  MerviNAT:
     Type: AWS::EC2::NatGateway
     Properties:
       AllocationId:
@@ -90,4 +90,85 @@ Resources:
     Type: AWS::EC2::EIP
     Properties:
       Domain: vpc
+
+  MerviRouteA:
+    Type: AWS::EC2::Route
+    DependsOn: MerviAttachGateway
+    Properties:
+      RouteTableId:
+        Ref: MerviRouteTableA
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId:
+        Ref: MerviInternetGateway
+
+  MerviRouteB:
+    Type: AWS::EC2::Route
+    DependsOn: MerviAttachGateway
+    Properties:
+      RouteTableId:
+        Ref: MerviRouteTableB
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId:
+        Ref: MerviNAT
+
+  MerviRouteC:
+    Type: AWS::EC2::Route
+    DependsOn: MerviAttachGateway
+    Properties:
+      RouteTableId:
+        Ref: MerviRouteTableC
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId:
+        Ref: MerviNAT
+
+  MerviRouteTableA:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId:
+        Ref: MerviVPC
+      Tags:
+        - Key: Name
+          Value: MerviRouteTableA
+
+  MerviRouteTableB:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId:
+        Ref: MerviVPC
+      Tags:
+        - Key: Name
+          Value: MerviRouteTableB
+
+  MerviRouteTableC:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId:
+        Ref: MerviVPC
+      Tags:
+        - Key: Name
+          Value: MerviRouteTableC
+
+  MerviSubnetRouteTableAssociationA:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId:
+        Ref: MerviSubnetA
+      RouteTableId:
+        Ref: MerviRouteTableA
+
+  MerviSubnetRouteTableAssociationB:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId:
+        Ref: MerviSubnetB
+      RouteTableId:
+        Ref: MerviRouteTableB
+
+  MerviSubnetRouteTableAssociationC:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId:
+        Ref: MerviSubnetC
+      RouteTableId:
+        Ref: MerviRouteTableC
 
